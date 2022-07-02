@@ -34,5 +34,3 @@ def convert_file_to_graph(file, container):
         convert(string_data)
 
         container.progress(30)
-
-        print(string_data)
