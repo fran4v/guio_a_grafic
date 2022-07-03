@@ -2,6 +2,7 @@ import streamlit as st
 from io import StringIO
 from txt_conversion import convert
 from striprtf.striprtf import rtf_to_text
+import unidecode
 
 def run_app():
     container = st.container()
@@ -39,6 +40,6 @@ def convert_file_to_graph(file, container, project_name):
             container.download_button(
                 label='Descarrega',
                 data=output_file,
-                file_name='grafic.xlsx',
+                file_name=f'grafic {unidecode.unidecode(project_name)}.xlsx',
                 mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
             
