@@ -2,17 +2,14 @@ import re
 import openpyxl
 import datetime 
 
-def convert(string_data):
-    
-    project_name = string_data.partition('\n')[0]
-
+def convert(string_data, project_name):
     takes_list = string_data.split('------------------------------')
     num_takes = len(takes_list)
 
     characters_in_takes_list = []
 
     for take in takes_list:
-        characters = detect_characters_in_take(take)
+        characters = get_characters_in_take(take)
         characters_in_takes_list.append(characters)
     
     template = openpyxl.load_workbook('data/template.xlsx')
@@ -21,7 +18,7 @@ def convert(string_data):
         write_xlsx_page(i, characters_in_takes_list, project_name, template)
 
 
-def detect_characters_in_take(take):
+def get_characters_in_take(take):
     characters = re.findall(re.escape('*')+"(.*?)"+re.escape('*'), take)
     return list(set(characters))
 

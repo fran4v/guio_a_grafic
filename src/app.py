@@ -9,15 +9,17 @@ def run_app():
     # Crea un gràfic a partir d'un guió
     """)
 
-    uploaded_file = container.file_uploader("Selecciona l'arxiu .rtf o .txt", ['rtf', 'txt'])
-        
+    uploaded_file = container.file_uploader("Selecciona l'arxiu .rtf", ['rtf'])
+    project_name = container.text_input('Nom del projecte')
+
     result = container.empty()
+
     result.button("Crea", disabled=True, key='1')
     if uploaded_file is not None:
-        result.button("Crea", on_click=convert_file_to_graph, args=(uploaded_file, container), key='2')
+        result.button("Crea", on_click=convert_file_to_graph, args=(uploaded_file, container, project_name), key='2')
 
 
-def convert_file_to_graph(file, container):   
+def convert_file_to_graph(file, container, project_name):   
     if file is not None:
         # To read file as bytes:
         bytes_data = file.getvalue()
@@ -31,6 +33,12 @@ def convert_file_to_graph(file, container):
         if file.type == 'text/rtf':
             string_data = rtf_to_text(string_data)
         
-        convert(string_data)
+        convert(string_data, project_name)
 
-        container.progress(30)
+        with open('grafic_output.xlsx', 'rb') as output_file:
+            container.download_button(
+                label='Descarrega',
+                data=output_file,
+                file_name='grafic.xlsx',
+                mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            
