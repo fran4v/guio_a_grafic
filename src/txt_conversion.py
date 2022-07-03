@@ -16,7 +16,9 @@ def convert(string_data, project_name):
 
     for i in range(num_takes//50 + 1):
         write_xlsx_page(i, characters_in_takes_list, project_name, template)
-
+    
+    delete_empty_sheets(template, template.sheetnames)
+    template.save('grafic_output.xlsx')
 
 def get_characters_in_take(take):
     characters = re.findall(re.escape('*')+"(.*?)"+re.escape('*'), take)
@@ -93,3 +95,8 @@ def write_participation(sheet, characters, characters_in_takes_list, page):
             cell = f'{column}{row}'
             if character in take:
                 sheet[cell] = 'X'
+
+def delete_empty_sheets(workbook, sheets):
+    for sheet in sheets:
+        if workbook[sheet]['AW3'].value == None:
+            workbook.remove_sheet(workbook[sheet])
