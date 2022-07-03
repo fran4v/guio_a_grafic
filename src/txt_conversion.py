@@ -39,6 +39,7 @@ def write_xlsx_page(page, characters_in_takes_list, project_name, template):
     write_characters(sheet, characters)
     write_total_takes(sheet, characters, characters_total_takes)
     write_partial_takes(sheet, characters, characters_partial_takes)
+    write_participation(sheet, characters, characters_in_takes_list, page)
 
     template.save('grafic_output.xlsx')
 
@@ -62,7 +63,7 @@ def get_total_num_takes_of_characters(characters, characters_in_takes_list):
 def get_partial_num_takes_of_characters(characters, characters_in_takes_list, page):
     character_partial_dict = {}
     for character in characters:
-        for take in characters_in_takes_list[50*page + 1 : min(50*page + 50 + 1, len(characters_in_takes_list))]:
+        for take in characters_in_takes_list[50*page : min(50*page + 50 + 1, len(characters_in_takes_list))]:
             try:
                 character_partial_dict[character] += take.count(character)
             except:
@@ -83,3 +84,15 @@ def write_partial_takes(sheet, characters, characters_partial_takes):
     for index, character in enumerate(characters):
         cell = f'B{8+index}'
         sheet[cell] = characters_partial_takes[character]
+
+def write_participation(sheet, characters, characters_in_takes_list, page):
+    cell_columns = ['E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
+                'AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ','AK','AL','AM','AN','AO','AP','AQ','AR','AS','AT','AU','AV','AW','AX','AY','AZ',
+                'BA', 'BB']
+    for index, character in enumerate(characters):
+        row = 8+index
+        for jndex, take in enumerate(characters_in_takes_list[50*page + 1 : min(50*page + 50 + 1, len(characters_in_takes_list))]):
+            column = cell_columns[jndex]
+            cell = f'{column}{row}'
+            if character in take:
+                sheet[cell] = 'X'
