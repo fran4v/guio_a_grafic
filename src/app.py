@@ -26,7 +26,7 @@ def convert_file_to_graph(file, container, project_name):
         bytes_data = file.getvalue()
 
         #To convert to a string based IO:
-        stringio = StringIO(file.getvalue().decode("utf-8"))
+        stringio = StringIO(bytes_data.decode("utf-8"))
 
         #To read file as string:
         string_data = stringio.read()
