@@ -31,7 +31,7 @@ def convert_file_to_graph(file, container, project_name):
         string_data = stringio.read()
 
         if file.type == 'text/rtf':
-            string_data = rtf_to_text(string_data)
+            string_data = rtf_to_text(string_data, errors="ignore")
         
         convert(string_data, project_name)
 

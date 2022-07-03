@@ -3,7 +3,7 @@ import openpyxl
 import datetime 
 
 def convert(string_data, project_name):
-    takes_list = string_data.split('------------------------------')
+    takes_list = string_data.split('TAKE #')
     num_takes = len(takes_list)
 
     characters_in_takes_list = []
