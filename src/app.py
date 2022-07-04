@@ -1,6 +1,6 @@
 import streamlit as st
 from io import StringIO
-from txt_conversion import convert
+from rtf_conversion import convert_graph, convert_summary
 from striprtf.striprtf import rtf_to_text
 import unidecode
 
@@ -16,11 +16,13 @@ def run_app():
     result = container.empty()
 
     result.button("Crea", disabled=True, key='1')
+    include_summary = container.checkbox('Inclou resum')
+
     if uploaded_file is not None:
-        result.button("Crea", on_click=convert_file_to_graph, args=(uploaded_file, container, project_name), key='2')
+        result.button("Crea", on_click=convert_file_to_graph, args=(uploaded_file, container, project_name, include_summary), key='2')
 
 
-def convert_file_to_graph(file, container, project_name):   
+def convert_file_to_graph(file, container, project_name, include_summary):   
     if file is not None:
         # To read file as bytes:
         bytes_data = file.getvalue()
@@ -34,7 +36,10 @@ def convert_file_to_graph(file, container, project_name):
         if file.type == 'text/rtf':
             string_data = rtf_to_text(string_data, errors="ignore")
         
-        convert(string_data, project_name)
+        convert_graph(string_data, project_name)
+
+        if include_summary:
+            convert_summary(string_data)
 
         with open('grafic_output.xlsx', 'rb') as output_file:
             container.download_button(

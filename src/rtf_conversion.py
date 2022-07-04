@@ -2,7 +2,7 @@ import re
 import openpyxl
 import datetime 
 
-def convert(string_data, project_name):
+def convert_graph(string_data, project_name):
     takes_list = string_data.split('TAKE #')
     num_takes = len(takes_list)
 
@@ -100,3 +100,6 @@ def delete_empty_sheets(workbook, sheets):
     for sheet in sheets:
         if workbook[sheet]['AW3'].value == None:
             workbook.remove_sheet(workbook[sheet])
+
+def convert_summary(string_data):
+    pass
