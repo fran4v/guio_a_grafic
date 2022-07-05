@@ -25,17 +25,14 @@ def run_app():
 
 def convert_file_to_graph(file, container, project_name, include_summary):   
     if file is not None:
-        # To read file as bytes:
-        bytes_data = file.getvalue()
+        bytes_data = file.getvalue() # Read file as bytes
 
-        #To convert to a string based IO:
-        stringio = StringIO(bytes_data.decode("utf-8"))
+        stringio = StringIO(bytes_data.decode("utf-8")) # Convert bytes to a string based IO
 
-        #To read file as string:
-        string_data = stringio.read()
+        string_data = stringio.read() # Read file as string
 
         if file.type == 'text/rtf':
-            string_data = rtf_to_text(string_data, errors="ignore")
+            string_data = rtf_to_text(string_data, errors="ignore") # Convert .rtf file to clean string, ignorning special characters
         
         convert_graph(string_data, project_name)
 
