@@ -26,17 +26,17 @@ def get_characters_in_take(take):
         if '\t' in line:
             if line.count('*') > 2: # Deal with multiple characters in line
                 multiple_chars = re.findall(re.escape('*')+"(.*?)"+re.escape('*'), line.split('\t')[0])
-                for char in multiple_chars:
-                    if char != '':
-                        characters.append(clean_char(char))
+                for character in multiple_chars:
+                    if character.isupper() or character.islower():
+                        characters.append(clean_char(character))
             elif '/' in line:
                 multiple_chars = line.split('\t')[0].split('/')
-                for char in multiple_chars:
-                    if char != '':
-                        characters.append(clean_char(char))
+                for character in multiple_chars:
+                    if character.isupper() or character.islower():
+                        characters.append(clean_char(character))
             else:
                 character = clean_char(line.split('\t')[0])
-                if character != '':
+                if character.isupper() or character.islower():
                     characters.append(clean_char(character))
         if 'original' in line.lower():
             characters.append('ORIGINAL')
