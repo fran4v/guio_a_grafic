@@ -1,3 +1,4 @@
 env
 src/__pycache__
 grafic_output.xlsx
+.DS_Store
