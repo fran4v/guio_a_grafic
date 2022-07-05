@@ -17,7 +17,7 @@ def run_app():
     result = container.empty()
 
     result.button("Crea", disabled=True, key='1')
-    include_summary = container.checkbox('Inclou resum')
+    include_summary = container.checkbox('Inclou resum (WIP)')
 
     if uploaded_file is not None:
         result.button("Crea", on_click=convert_file_to_graph, args=(uploaded_file, container, project_name, include_summary), key='2')
