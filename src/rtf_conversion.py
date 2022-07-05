@@ -21,7 +21,26 @@ def convert_graph(string_data, project_name):
     template.save('grafic_output.xlsx')
 
 def get_characters_in_take(take):
-    characters = re.findall(re.escape('*')+"(.*?)"+re.escape('*'), take)
+    characters = []
+    for line in take.split('\n'):
+        if '\t' in line:
+            if line.count('*') > 2: # Deal with multiple characters in line
+                multiple_chars = re.findall(re.escape('*')+"(.*?)"+re.escape('*'), line.split('\t')[0])
+                for char in multiple_chars:
+                    if char != '':
+                        characters.append(clean_char(char))
+            elif '/' in line:
+                multiple_chars = line.split('\t')[0].split('/')
+                for char in multiple_chars:
+                    if char != '':
+                        characters.append(clean_char(char))
+            else:
+                character = clean_char(line.split('\t')[0])
+                if character != '':
+                    characters.append(clean_char(character))
+        if 'original' in line.lower():
+            characters.append('ORIGINAL')
+    #characters = re.findall(re.escape('*')+"(.*?)"+re.escape('*'), take)
     return list(set(characters))
 
 def write_xlsx_page(page, characters_in_takes_list, project_name, template):
@@ -94,14 +113,17 @@ def write_participation(sheet, characters, characters_in_takes_list, page):
             column = cell_columns[jndex]
             cell = f'{column}{row}'
             if character in take:
-                border = openpyxl.styles.borders.Border(
-                    diagonal= openpyxl.styles.borders.Side(style='thin'),
-                    left=sheet[cell].border.left,
-                    right=sheet[cell].border.right,
-                    top=sheet[cell].border.top,
-                    bottom=sheet[cell].border.bottom,
-                    diagonalUp=True)
-                sheet[cell].border = border
+                if character.lower() != 'original':
+                    border = openpyxl.styles.borders.Border(
+                        diagonal= openpyxl.styles.borders.Side(style='thin'),
+                        left=sheet[cell].border.left,
+                        right=sheet[cell].border.right,
+                        top=sheet[cell].border.top,
+                        bottom=sheet[cell].border.bottom,
+                        diagonalUp=True)
+                    sheet[cell].border = border
+                else:
+                    sheet[cell] = 'O'
 
 def delete_empty_sheets(workbook, sheets):
     for sheet in sheets:
@@ -110,3 +132,6 @@ def delete_empty_sheets(workbook, sheets):
 
 def convert_summary(string_data):
     pass
+
+def clean_char(character):
+    return str(character).replace(':','').replace('*','').strip().upper()
