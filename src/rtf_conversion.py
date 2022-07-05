@@ -94,7 +94,14 @@ def write_participation(sheet, characters, characters_in_takes_list, page):
             column = cell_columns[jndex]
             cell = f'{column}{row}'
             if character in take:
-                sheet[cell] = 'X'
+                border = openpyxl.styles.borders.Border(
+                    diagonal= openpyxl.styles.borders.Side(style='thin'),
+                    left=sheet[cell].border.left,
+                    right=sheet[cell].border.right,
+                    top=sheet[cell].border.top,
+                    bottom=sheet[cell].border.bottom,
+                    diagonalUp=True)
+                sheet[cell].border = border
 
 def delete_empty_sheets(workbook, sheets):
     for sheet in sheets:
