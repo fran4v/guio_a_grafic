@@ -3,8 +3,18 @@ import openpyxl
 import datetime 
 
 def convert_graph(string_data, project_name):
-    takes_list = string_data.split('TAKE #')
-    num_takes = len(takes_list)
+    if 'TAKE #' in string_data:
+        takes_list = string_data.split('TAKE #')
+        num_takes = len(takes_list)
+    else:
+        num_takes = len([x for x in re.findall(re.escape('.')+"(.*?)"+re.escape('/'), string_data) if x != '' and ' ' not in x])
+        takes_list = ['']
+        for i in range(num_takes):
+            take = string_data[string_data.find(f'.{i+1}/'):string_data.find(f'.{i+2}/')]
+            takes_list.append(take)
+        print(f'Num takes: {num_takes}')
+        print(f'Len takes_list: {len(takes_list)}')
+        print(takes_list)
 
     characters_in_takes_list = []
 
