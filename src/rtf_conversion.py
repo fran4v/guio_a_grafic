@@ -169,6 +169,9 @@ def clean_char(character):
     return str(character).replace(':','').replace('*','').strip().upper()
 
 def update_files(characters_total_takes):
+    '''
+    Add actors names to files
+    '''
     characters_actors_dict = {}
     characters_in_takes_list = st.session_state['characters_in_takes_list']
     num_takes = st.session_state['num_takes']
