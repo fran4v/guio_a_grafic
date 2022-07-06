@@ -25,6 +25,7 @@ def run_app():
 
     uploaded_file = container.file_uploader("Selecciona l'arxiu .rtf, .txt o .docx", ['rtf', 'txt', 'docx'])
     project_name = container.text_input('Nom del projecte')
+    st.session_state['project_name'] = project_name
 
     result = container.empty()
 
