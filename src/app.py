@@ -95,6 +95,7 @@ def preview_characters(characters_total_takes, container):
     if submitted:
         project_name = st.session_state['project_name']
         include_summary = st.session_state['include_summary']
+        st.session_state['updated_actors'] = True
         download_updated(project_name, container, include_summary)
 
 def download(project_name, container, include_summary):
@@ -108,11 +109,15 @@ def download(project_name, container, include_summary):
                 key = 1)
     else:
         write_zip()
+        if project_name == '':
+            file_name = 'grafic.zip'
+        else:
+            file_name = f'{unidecode.unidecode(project_name)}.zip'
         with open("output.zip", "rb") as output_file:
             container.download_button(
                 label='Descarrega sense actors',
                 data=output_file,
-                file_name=f'{unidecode.unidecode(project_name)}.zip',
+                file_name=file_name,
                 mime='application/zip',
                 key = 1)
 
@@ -127,11 +132,15 @@ def download_updated(project_name, container, include_summary):
                 key = 2)
     else:
         write_zip()
-        with open("output.zip", "rb") as output_file:
+        if project_name == '':
+            file_name = 'grafic.zip'
+        else:
+            file_name = f'{unidecode.unidecode(project_name)}.zip'
+        with open("output_updated.zip", "rb") as output_file:
             container.download_button(
                 label='Descarrega amb actors',
                 data=output_file,
-                file_name=f'{unidecode.unidecode(project_name)}.zip',
+                file_name=file_name,
                 mime='application/zip',
                 key = 2)
 
@@ -142,7 +151,7 @@ def write_zip():
         zipObj.write("summary.rtf")
         zipObj.close()
     else:
-        zipObj = ZipFile("output.zip", "w")
+        zipObj = ZipFile("output_updated.zip", "w")
         zipObj.write("grafic_output_updated.xlsx")
         zipObj.write("summary_updated.rtf")
         zipObj.close()
