@@ -162,9 +162,6 @@ def delete_empty_sheets(workbook, sheets):
         if workbook[sheet]['AW3'].value == None:
             workbook.remove_sheet(workbook[sheet])
 
-def convert_summary(characters_total_takes):
-    pass
-
 def clean_char(character):
     return str(character).replace(':','').replace('*','').strip().upper()
 
@@ -178,11 +175,14 @@ def update_files(characters_total_takes):
 
     for character in list(characters_total_takes.keys()):
         characters_actors_dict[character] = st.session_state[character]
+    st.session_state['characters_actors_dict'] = characters_actors_dict
 
     xlsx_file = openpyxl.load_workbook('grafic_output.xlsx')
 
     for i in range(num_takes//50 + 1):
         update_xlsx_page(i, characters_actors_dict, xlsx_file, characters_in_takes_list)
+    
+    update_summary(characters_total_takes)
 
 def update_xlsx_page(page, characters_actors_dict, xlsx_file, characters_in_takes_list):
     sheets = xlsx_file.sheetnames
@@ -193,4 +193,55 @@ def update_xlsx_page(page, characters_actors_dict, xlsx_file, characters_in_take
     write_actors(sheet, characters, characters_actors_dict)
 
     xlsx_file.save('grafic_output_updated.xlsx')
+
+def convert_summary(characters_total_takes):
+    project_name = st.session_state['project_name']
+    characters_in_takes_list = st.session_state['characters_in_takes_list']
+
+    with open('summary.txt', 'w') as f:
+        f.write('================================\n')
+        f.write(f'{project_name}\t{datetime.datetime.now().strftime("%d/%m/%Y")}\n')
+        f.write('================================\n\n\n')
+        f.write('/// RECOMPTE DE TAKES PER PERSONATGE\n\n')
+
+        for character in list(characters_total_takes.keys()):
+            takes_with_character_list = []
+            f.write(f'{character} ({characters_total_takes[character]})\n')
+            for index, take in enumerate(characters_in_takes_list):
+                if character in take:
+                    takes_with_character_list.append(str(index))
+            takes_summary = ' | '.join(takes_with_character_list)
+            f.write(f'{takes_summary}\n\n')
+
+def update_summary(characters_total_takes):
+    characters_in_takes_list = st.session_state['characters_in_takes_list']
+    characters_actors_dict = st.session_state['characters_actors_dict']
+    actors_takes_dict = {}
     
+    old_summary = open("summary.txt", "r")
+    old_summary_string = old_summary.read()
+
+    with open('summary_updated.txt', 'w') as f:
+        f.write(old_summary_string)
+        f.write("/// RECOMPTE DE TAKES PER ACTORS DE DOBLATGE (pot ser que una mateixa take apareixi repetida si l'actor interpreta més d'un dels personatges que hi apareixen)\n\n")
+
+        for character in list(characters_total_takes.keys()):
+            takes_with_actor_list = []
+
+            actor = characters_actors_dict[character]
+            if actor not in actors_takes_dict:
+                actors_takes_dict[actor] = []
+            if actor != '' and actor != '(buit)':
+                try: 
+                    for index, take in enumerate(characters_in_takes_list):
+                        if character in take:
+                            takes_with_actor_list.append(str(index))
+                    actors_takes_dict[actor].extend(takes_with_actor_list)
+                except:
+                    pass
+        
+        for actor in list(actors_takes_dict.keys()):
+            if actor != '' and actor != '(buit)':
+                f.write(f'{actor} ({len(actors_takes_dict[actor])})\n')
+                takes_summary = ' | '.join(sorted(actors_takes_dict[actor], key=lambda x: float(x)))
+                f.write(f'{takes_summary}\n\n')

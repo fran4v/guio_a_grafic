@@ -19,6 +19,8 @@ def run_app():
         st.session_state['include_summary'] = False
     if 'num_takes' not in st.session_state:
         st.session_state['num_takes'] = 0
+    if 'characters_actors_dict' not in st.session_state:
+            st.session_state['characters_actors_dict'] = {}
 
     container = st.container()
     container.write("""
