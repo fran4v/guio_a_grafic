@@ -12,9 +12,6 @@ def convert_graph(string_data, project_name):
         for i in range(num_takes):
             take = string_data[string_data.find(f'.{i+1}/'):string_data.find(f'.{i+2}/')]
             takes_list.append(take)
-        print(f'Num takes: {num_takes}')
-        print(f'Len takes_list: {len(takes_list)}')
-        print(takes_list)
 
     characters_in_takes_list = []
 

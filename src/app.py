@@ -47,7 +47,6 @@ def convert_file_to_graph(file, container, project_name, include_summary):
 
         download(project_name, container, include_summary)
         
-
 def download(project_name, container, include_summary):
     if not include_summary:
         with open('grafic_output.xlsx', 'rb') as output_file:
@@ -64,7 +63,6 @@ def download(project_name, container, include_summary):
                 data=output_file,
                 file_name=f'{unidecode.unidecode(project_name)}.zip',
                 mime='application/zip')
-
 
 def write_zip():
     zipObj = ZipFile("output.zip", "w")
