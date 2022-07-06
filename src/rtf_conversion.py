@@ -15,6 +15,7 @@ def convert_graph(string_data, project_name):
             takes_list.append(take)
 
     characters_in_takes_list = []
+    st.session_state['num_takes'] = num_takes
 
     for take in takes_list:
         characters = get_characters_in_take(take)
@@ -129,7 +130,8 @@ def write_actors(sheet, characters, characters_actors_dict):
     for index, character in enumerate(characters):
         cell = f'C{8+index}'
         try:
-            sheet[cell] = characters_actors_dict[character]
+            if characters_actors_dict[character] != '(buit)':
+                sheet[cell] = characters_actors_dict[character]
         except:
             pass
 
@@ -166,9 +168,10 @@ def convert_summary(characters_total_takes):
 def clean_char(character):
     return str(character).replace(':','').replace('*','').strip().upper()
 
-def update_files(characters_total_takes, num_takes):
+def update_files(characters_total_takes):
     characters_actors_dict = {}
     characters_in_takes_list = st.session_state['characters_in_takes_list']
+    num_takes = st.session_state['num_takes']
 
     for character in list(characters_total_takes.keys()):
         characters_actors_dict[character] = st.session_state[character]

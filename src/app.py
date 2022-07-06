@@ -17,6 +17,8 @@ def run_app():
         st.session_state['project_name'] = ''
     if 'include_summary' not in st.session_state:
         st.session_state['include_summary'] = False
+    if 'num_takes' not in st.session_state:
+        st.session_state['num_takes'] = 0
 
     container = st.container()
     container.write("""
@@ -98,7 +100,7 @@ def preview_characters(characters_total_takes, container):
         project_name = st.session_state['project_name']
         include_summary = st.session_state['include_summary']
         st.session_state['updated_actors'] = True
-        update_files(characters_total_takes, len(characters_total_takes))
+        update_files(characters_total_takes)
         download_updated(project_name, container, include_summary)
 
 def download(project_name, container, include_summary):
