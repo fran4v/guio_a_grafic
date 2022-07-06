@@ -29,7 +29,7 @@ def convert_graph(string_data, project_name):
         write_xlsx_page(i, characters_in_takes_list, project_name, template)
     
     delete_empty_sheets(template, template.sheetnames)
-    template.save('grafic_output.xlsx')
+    template.save('grafic.xlsx')
 
     characters_in_script = get_characters_in_script(characters_in_takes_list)
     characters_total_takes = get_total_num_takes_of_characters(characters_in_script, characters_in_takes_list)
@@ -75,7 +75,7 @@ def write_xlsx_page(page, characters_in_takes_list, project_name, template):
     write_partial_takes(sheet, characters, characters_partial_takes)
     write_participation(sheet, characters, characters_in_takes_list, page)
 
-    template.save('grafic_output.xlsx')
+    template.save('grafic.xlsx')
 
 def get_characters_in_page(page, characters_in_takes_list):
     characters_in_page = []
@@ -177,7 +177,7 @@ def update_files(characters_total_takes):
         characters_actors_dict[character] = st.session_state[character]
     st.session_state['characters_actors_dict'] = characters_actors_dict
 
-    xlsx_file = openpyxl.load_workbook('grafic_output.xlsx')
+    xlsx_file = openpyxl.load_workbook('grafic.xlsx')
 
     for i in range(num_takes//50 + 1):
         update_xlsx_page(i, characters_actors_dict, xlsx_file, characters_in_takes_list)
@@ -192,13 +192,13 @@ def update_xlsx_page(page, characters_actors_dict, xlsx_file, characters_in_take
 
     write_actors(sheet, characters, characters_actors_dict)
 
-    xlsx_file.save('grafic_output_updated.xlsx')
+    xlsx_file.save('grafic_actors.xlsx')
 
 def convert_summary(characters_total_takes):
     project_name = st.session_state['project_name']
     characters_in_takes_list = st.session_state['characters_in_takes_list']
 
-    with open('summary.txt', 'w') as f:
+    with open('resum.txt', 'w') as f:
         f.write('================================\n')
         f.write(f'{project_name}\t{datetime.datetime.now().strftime("%d/%m/%Y")}\n')
         f.write('================================\n\n\n')
@@ -218,12 +218,12 @@ def update_summary(characters_total_takes):
     characters_actors_dict = st.session_state['characters_actors_dict']
     actors_takes_dict = {}
     
-    old_summary = open("summary.txt", "r")
+    old_summary = open("resum.txt", "r")
     old_summary_string = old_summary.read()
 
-    with open('summary_updated.txt', 'w') as f:
+    with open('resum_actors.txt', 'w') as f:
         f.write(old_summary_string)
-        f.write("/// RECOMPTE DE TAKES PER ACTORS DE DOBLATGE (pot ser que una mateixa take apareixi repetida si l'actor interpreta més d'un dels personatges que hi apareixen)\n\n")
+        f.write("\n/// RECOMPTE DE TAKES PER ACTORS DE DOBLATGE (pot ser que una mateixa take apareixi repetida si l'actor interpreta més d'un dels personatges que hi apareixen)\n\n")
 
         for character in list(characters_total_takes.keys()):
             takes_with_actor_list = []

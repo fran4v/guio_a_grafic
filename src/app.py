@@ -34,7 +34,7 @@ def run_app():
     result = container.empty()
 
     result.button("Crea", disabled=True, key='1')
-    include_summary = container.checkbox('Inclou resum (WIP)')
+    include_summary = container.checkbox('Inclou resum')
     if include_summary:
         st.session_state['include_summary'] = True
     else:
@@ -109,7 +109,7 @@ def preview_characters(characters_total_takes, container):
 
 def download(project_name, container, include_summary):
     if not include_summary:
-        with open('grafic_output.xlsx', 'rb') as output_file:
+        with open('grafic.xlsx', 'rb') as output_file:
             container.download_button(
                 label='Descarrega sense actors',
                 data=output_file,
@@ -132,7 +132,7 @@ def download(project_name, container, include_summary):
 
 def download_updated(project_name, container, include_summary):
     if not include_summary:
-        with open('grafic_output_updated.xlsx', 'rb') as output_file:
+        with open('grafic_actors.xlsx', 'rb') as output_file:
             container.download_button(
                 label='Descarrega amb actors',
                 data=output_file,
@@ -156,12 +156,12 @@ def download_updated(project_name, container, include_summary):
 def write_zip():
     if st.session_state['updated_actors'] == False:
         zipObj = ZipFile("output.zip", "w")
-        zipObj.write("grafic_output.xlsx")
-        zipObj.write("summary.rtf")
+        zipObj.write("grafic.xlsx")
+        zipObj.write("resum.txt")
         zipObj.close()
     else:
         zipObj = ZipFile("output_updated.zip", "w")
-        zipObj.write("grafic_output_updated.xlsx")
-        zipObj.write("summary_updated.rtf")
+        zipObj.write("grafic_actors.xlsx")
+        zipObj.write("resum_actors.txt")
         zipObj.close()
 

@@ -3,8 +3,8 @@ env
 src/__pycache__
 .DS_Store
 
-grafic_output.xlsx
-grafic_output_updated.xlsx
+grafic.xlsx
+grafic_actors.xlsx
 
 summary.rtf
 summary_updated.rtf
@@ -12,5 +12,5 @@ summary_updated.rtf
 output.zip
 output_updated.zip
 
-summary.txt
-summary_updated.txt
+resum.txt
+resum_actors.txt
