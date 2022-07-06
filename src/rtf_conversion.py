@@ -27,6 +27,11 @@ def convert_graph(string_data, project_name):
     delete_empty_sheets(template, template.sheetnames)
     template.save('grafic_output.xlsx')
 
+    characters_in_script = get_characters_in_script(characters_in_takes_list)
+    characters_total_takes = get_total_num_takes_of_characters(characters_in_script, characters_in_takes_list)
+
+    return characters_total_takes
+
 def get_characters_in_take(take):
     characters = []
     for line in take.split('\n'):
@@ -74,6 +79,13 @@ def get_characters_in_page(page, characters_in_takes_list):
         for character in characters_in_takes_list[i]:
             characters_in_page.append(character)
     return list(set(characters_in_page))
+
+def get_characters_in_script(characters_in_takes_list):
+    characters_in_script = []
+    for i in range(1, len(characters_in_takes_list)):
+        for character in characters_in_takes_list[i]:
+            characters_in_script.append(character)
+    return list(set(characters_in_script))
 
 def get_total_num_takes_of_characters(characters, characters_in_takes_list):
     character_total_dict = {}
@@ -137,7 +149,7 @@ def delete_empty_sheets(workbook, sheets):
         if workbook[sheet]['AW3'].value == None:
             workbook.remove_sheet(workbook[sheet])
 
-def convert_summary(string_data):
+def convert_summary(characters_total_takes):
     pass
 
 def clean_char(character):

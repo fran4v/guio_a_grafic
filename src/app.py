@@ -5,6 +5,7 @@ from striprtf.striprtf import rtf_to_text
 import unidecode
 from zipfile import ZipFile
 import docx2txt
+import pandas as pd
 
 def run_app():
     container = st.container()
@@ -40,12 +41,33 @@ def convert_file_to_graph(file, container, project_name, include_summary):
         elif file.type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
             string_data = docx2txt.process(file)  # Convert to txt
 
-        convert_graph(string_data, project_name)
+        characters_total_takes = convert_graph(string_data, project_name)
 
         if include_summary:
-            convert_summary(string_data)
+            convert_summary(characters_total_takes)
+        
+        download(project_name, container, include_summary) 
 
-        download(project_name, container, include_summary)
+        container.text("")
+        container.text("")
+        container.write('Previsualització (els personatges assenyalats amb "⚠" només apareixen en una take)')
+        
+        preview_characters(characters_total_takes, container)
+
+        container.write("⚠ En cas que detectis algun error, cal modificar l'arxiu que has penjat i tornar-ho a intentar.")
+
+def preview_characters(characters_total_takes, container):
+    for i in list(characters_total_takes):
+        if characters_total_takes[i] == 1:
+            characters_total_takes.pop(i, None)
+            characters_total_takes[f'{i}\t⚠'] = 1
+    sorted_dict = {key: value for key, value in sorted(characters_total_takes.items())}
+    col1, col2 = container.columns(2)
+    with col1:
+        characters = pd.DataFrame.from_dict(sorted_dict, orient='index', columns=['Takes totals'])
+        st.table(characters)
+    with col2:
+        pass
         
 def download(project_name, container, include_summary):
     if not include_summary:
