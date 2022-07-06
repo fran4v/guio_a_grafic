@@ -35,6 +35,8 @@ def run_app():
     include_summary = container.checkbox('Inclou resum (WIP)')
     if include_summary:
         st.session_state['include_summary'] = True
+    else:
+        st.session_state['include_summary'] = False
 
     if uploaded_file is not None:
         result.button("Crea", on_click=convert_file_to_graph, args=(uploaded_file, project_name, include_summary), key='2')
