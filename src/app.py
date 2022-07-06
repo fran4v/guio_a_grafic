@@ -54,7 +54,7 @@ def convert_file_to_graph(file, container, project_name, include_summary):
         
         preview_characters(characters_total_takes, container)
 
-        container.write("⚠ En cas que detectis algun error, cal modificar l'arxiu que has penjat i tornar-ho a intentar.")
+        container.write("*En cas que es detecti algun error, cal modificar l'arxiu que s'ha penjat i tornar-ho a intentar")
 
 def preview_characters(characters_total_takes, container):
     for i in list(characters_total_takes):
