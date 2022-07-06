@@ -1,6 +1,7 @@
 import re
 import openpyxl
-import datetime 
+import datetime
+import streamlit as st
 
 def convert_graph(string_data, project_name):
     if 'TAKE #' in string_data:
@@ -19,6 +20,8 @@ def convert_graph(string_data, project_name):
         characters = get_characters_in_take(take)
         characters_in_takes_list.append(characters)
     
+    st.session_state['characters_in_takes_list'] = characters_in_takes_list
+
     template = openpyxl.load_workbook('data/template.xlsx')
 
     for i in range(num_takes//50 + 1):
@@ -122,6 +125,14 @@ def write_partial_takes(sheet, characters, characters_partial_takes):
         cell = f'B{8+index}'
         sheet[cell] = characters_partial_takes[character]
 
+def write_actors(sheet, characters, characters_actors_dict):
+    for index, character in enumerate(characters):
+        cell = f'C{8+index}'
+        try:
+            sheet[cell] = characters_actors_dict[character]
+        except:
+            pass
+
 def write_participation(sheet, characters, characters_in_takes_list, page):
     cell_columns = ['E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
                 'AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ','AK','AL','AM','AN','AO','AP','AQ','AR','AS','AT','AU','AV','AW','AX','AY','AZ',
@@ -154,3 +165,26 @@ def convert_summary(characters_total_takes):
 
 def clean_char(character):
     return str(character).replace(':','').replace('*','').strip().upper()
+
+def update_files(characters_total_takes, num_takes):
+    characters_actors_dict = {}
+    characters_in_takes_list = st.session_state['characters_in_takes_list']
+
+    for character in list(characters_total_takes.keys()):
+        characters_actors_dict[character] = st.session_state[character]
+
+    xlsx_file = openpyxl.load_workbook('grafic_output.xlsx')
+
+    for i in range(num_takes//50 + 1):
+        update_xlsx_page(i, characters_actors_dict, xlsx_file, characters_in_takes_list)
+
+def update_xlsx_page(page, characters_actors_dict, xlsx_file, characters_in_takes_list):
+    sheets = xlsx_file.sheetnames
+    sheet = xlsx_file[sheets[page]]
+
+    characters = get_characters_in_page(page, characters_in_takes_list)
+
+    write_actors(sheet, characters, characters_actors_dict)
+
+    xlsx_file.save('grafic_output_updated.xlsx')
+    

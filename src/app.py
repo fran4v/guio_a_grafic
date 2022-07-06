@@ -1,6 +1,6 @@
 import streamlit as st
 from io import StringIO
-from rtf_conversion import convert_graph, convert_summary
+from rtf_conversion import convert_graph, convert_summary, update_files
 from striprtf.striprtf import rtf_to_text
 import unidecode
 from zipfile import ZipFile
@@ -78,11 +78,12 @@ def convert_file_to_graph(file, project_name, include_summary):
             convert_summary(characters_total_takes)
             
 def preview_characters(characters_total_takes, container):
-    for i in list(characters_total_takes):
-        if characters_total_takes[i] == 1 and '⚠' not in i:
-            characters_total_takes.pop(i, None)
-            characters_total_takes[f'{i}\t⚠'] = 1
-    sorted_dict = {key: value for key, value in sorted(characters_total_takes.items())}
+    copy_characters_total_takes = dict(characters_total_takes)
+    for i in list(copy_characters_total_takes):
+        if copy_characters_total_takes[i] == 1 and '⚠' not in i:
+            copy_characters_total_takes.pop(i, None)
+            copy_characters_total_takes[f'{i}\t⚠'] = 1
+    sorted_dict = {key: value for key, value in sorted(copy_characters_total_takes.items())}
 
     voice_actors = ('(buit)', 'Actor1', 'Actor2', 'Actor3', 'Actor4') # WIP: Afegir txt amb llistat d'actors de doblatge
         
@@ -90,13 +91,14 @@ def preview_characters(characters_total_takes, container):
     for i in range(len(characters_total_takes)):
         character = list(sorted_dict.keys())[i]
         total_takes = list(sorted_dict.values())[i]
-        form.selectbox(label=f'{character} ({total_takes} takes)', options=voice_actors, key=i)
+        form.selectbox(label=f'{character} ({total_takes} takes)', options=voice_actors, key=character.replace('\t⚠', ''))
     submitted = form.form_submit_button("Afegeix actors")
 
     if submitted:
         project_name = st.session_state['project_name']
         include_summary = st.session_state['include_summary']
         st.session_state['updated_actors'] = True
+        update_files(characters_total_takes, len(characters_total_takes))
         download_updated(project_name, container, include_summary)
 
 def download(project_name, container, include_summary):
@@ -156,3 +158,4 @@ def write_zip():
         zipObj.write("grafic_output_updated.xlsx")
         zipObj.write("summary_updated.rtf")
         zipObj.close()
+
