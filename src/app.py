@@ -77,10 +77,10 @@ def convert_file_to_graph(file, project_name, include_summary):
         string_data = stringio.read() # Read file as string
 
         # Check if its a .rtf file
-        if file.type == 'text/rtf' or file.type == 'application/msword':
+        if file.name.endswith('.rtf'):
             string_data = rtf_to_text(string_data, errors="ignore") # Convert .rtf file to clean string, ignorning special characters
         # Check if its a .docx file
-        elif file.type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+        elif file.name.endswith('.docx'):
             string_data = docx2txt.process(file)  # Convert to txt
 
         characters_total_takes = convert_graph(string_data, project_name)
