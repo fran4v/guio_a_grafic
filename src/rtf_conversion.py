@@ -212,6 +212,11 @@ def convert_summary(characters_total_takes):
                     takes_with_character_list.append(str(index))
             takes_summary = ' | '.join(takes_with_character_list)
             f.write(f'{takes_summary}\n\n')
+        
+        f.write('\n/// ESTADILLO\n\n')
+
+        for character in list(characters_total_takes.keys()):
+            f.write(f'{character}\t\t{characters_total_takes[character]}\n')
 
 def update_summary(characters_total_takes):
     characters_in_takes_list = st.session_state['characters_in_takes_list']
@@ -220,10 +225,12 @@ def update_summary(characters_total_takes):
     
     old_summary = open("resum.txt", "r")
     old_summary_string = old_summary.read()
+    old_summary.close()
 
     with open('resum_actors.txt', 'w') as f:
+        old_summary_string = old_summary_string[:old_summary_string.find('/// ESTADILLO')]
         f.write(old_summary_string)
-        f.write("\n/// RECOMPTE DE TAKES PER ACTORS DE DOBLATGE (pot ser que una mateixa take apareixi repetida si l'actor interpreta més d'un dels personatges que hi apareixen)\n\n")
+        f.write("/// RECOMPTE DE TAKES PER ACTORS DE DOBLATGE (pot ser que una mateixa take apareixi repetida si l'actor interpreta més d'un dels personatges que hi apareixen)\n\n")
 
         for character in list(characters_total_takes.keys()):
             takes_with_actor_list = []
@@ -245,3 +252,11 @@ def update_summary(characters_total_takes):
                 f.write(f'{actor} ({len(actors_takes_dict[actor])})\n')
                 takes_summary = ' | '.join(sorted(actors_takes_dict[actor], key=lambda x: float(x)))
                 f.write(f'{takes_summary}\n\n')
+        
+        f.write('\n/// ESTADILLO\n\n')
+
+        for character in list(characters_total_takes.keys()):
+            actor = f'({characters_actors_dict[character]})'
+            if characters_actors_dict[character] == '(buit)':
+                actor = ''
+            f.write(f'{character}\t\t{characters_total_takes[character]}\t\t{actor}\n')
