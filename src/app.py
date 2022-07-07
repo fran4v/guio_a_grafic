@@ -1,3 +1,4 @@
+from faulthandler import disable
 import streamlit as st
 from io import StringIO
 from rtf_conversion import convert_graph, convert_summary, update_files
@@ -36,7 +37,13 @@ def run_app():
     result = container.empty()
 
     result.button("Crea", disabled=True, key='1')
-    include_summary = container.checkbox('Inclou resum')
+    
+    if not st.session_state['pushed_crea_button']:
+        include_summary = container.checkbox('Inclou resum')
+    else: 
+        include_summary = container.checkbox('Inclou resum', disabled=True)
+
+
     if include_summary:
         st.session_state['include_summary'] = True
     else:
