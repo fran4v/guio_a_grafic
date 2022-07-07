@@ -7,6 +7,8 @@ from zipfile import ZipFile
 import docx2txt
 
 def run_app():
+    hide_menu()
+
     if 'pushed_crea_button' not in st.session_state:
         st.session_state['pushed_crea_button'] = False
     if 'characters_total_takes' not in st.session_state:
@@ -165,3 +167,11 @@ def write_zip():
         zipObj.write("resum_actors.txt")
         zipObj.close()
 
+def hide_menu():
+    hide_menu_style = """
+        <style>
+        #MainMenu {visibility: hidden; }
+        footer {visibility: hidden;}
+        </style>
+        """
+    st.markdown(hide_menu_style, unsafe_allow_html=True)
