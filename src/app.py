@@ -1,7 +1,7 @@
 import streamlit as st
 from io import StringIO
 from text_conversion import convert_graph, convert_summary, update_files
-from striprtf import rtf_to_text
+from striprtf.striprtf import rtf_to_text
 import unidecode
 from zipfile import ZipFile
 import docx2txt
