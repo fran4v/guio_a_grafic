@@ -1,7 +1,6 @@
-from faulthandler import disable
 import streamlit as st
 from io import StringIO
-from rtf_conversion import convert_graph, convert_summary, update_files
+from text_conversion import convert_graph, convert_summary, update_files
 from striprtf.striprtf import rtf_to_text
 import unidecode
 from zipfile import ZipFile
