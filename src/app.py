@@ -78,6 +78,7 @@ def convert_file_to_graph(file, project_name, include_summary):
 
         # Check if its a .rtf file
         if file.type == 'text/rtf':
+            string_data = str(file.read().decode('ISO-8859-1'))
             string_data = rtf_to_text(string_data, errors="ignore") # Convert .rtf file to clean string, ignorning special characters
         
         # Check if its a .docx file
