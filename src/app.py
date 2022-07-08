@@ -103,7 +103,7 @@ def download_updated(project_name, container):
         file_name = 'grafic.zip'
     else:
         file_name = f'{unidecode.unidecode(project_name)}.zip'
-    with open("output_updated.zip", "rb") as output_file:
+    with open("output.zip", "rb") as output_file:
         container.download_button(
             label='Descarrega',
             data=output_file,
