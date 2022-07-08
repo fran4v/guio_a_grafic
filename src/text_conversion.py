@@ -214,7 +214,7 @@ def convert_summary(characters_total_takes):
             f.write(f'{takes_summary}\n\n')
         
         f.write('\n/// ESTADILLO\n')
-        f.write('(Preparado para copiar y pegar en Excel con columnas separadas)\n\n')
+        f.write('(Preparat per copiar i enganxar a Excel)\n\n')
 
         for character in list(characters_total_takes.keys()):
             f.write(f'{character}	{characters_total_takes[character]}\n')
@@ -255,7 +255,7 @@ def update_summary(characters_total_takes):
                 f.write(f'{takes_summary}\n\n')
         
         f.write('\n/// ESTADILLO\n')
-        f.write('(Preparado para copiar y pegar en Excel con columnas separadas)\n\n')
+        f.write('(Preparat per copiar i enganxar a Excel)\n\n')
 
         for character in list(characters_total_takes.keys()):
             actor = characters_actors_dict[character]
