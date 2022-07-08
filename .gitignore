@@ -4,10 +4,9 @@ src/__pycache__
 .DS_Store
 
 grafic.xlsx
-grafic_actors.xlsx
+grafic_old.xlsx
 
 output.zip
-output_updated.zip
 
 resum.txt
-resum_actors.txt
+resum_old.txt

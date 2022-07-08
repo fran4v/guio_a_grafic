@@ -17,8 +17,6 @@ def run_app():
         st.session_state['updated_actors'] = False
     if 'project_name' not in st.session_state:
         st.session_state['project_name'] = ''
-    if 'include_summary' not in st.session_state:
-        st.session_state['include_summary'] = False
     if 'num_takes' not in st.session_state:
         st.session_state['num_takes'] = 0
     if 'characters_actors_dict' not in st.session_state:
@@ -36,27 +34,14 @@ def run_app():
     result = container.empty()
 
     result.button("Crea", disabled=True, key='1')
-    
-    if not st.session_state['pushed_crea_button']:
-        include_summary = container.checkbox('Inclou resum')
-    else: 
-        include_summary = container.checkbox('Inclou resum', disabled=True)
-
-
-    if include_summary:
-        st.session_state['include_summary'] = True
-    else:
-        st.session_state['include_summary'] = False
 
     if uploaded_file is not None:
-        result.button("Crea", on_click=convert_file_to_graph, args=(uploaded_file, project_name, include_summary), key='2')
+        result.button("Crea", on_click=convert_file_to_graph, args=(uploaded_file, project_name), key='2')
     
     if uploaded_file is None:
         st.session_state['pushed_crea_button'] = False
     
     if st.session_state['pushed_crea_button'] and uploaded_file is not None:
-        download(project_name, container, include_summary)
-
         container.text("")
         container.text("")
         container.write('Previsualització (els personatges assenyalats amb "⚠" només apareixen en una take)')
@@ -66,7 +51,7 @@ def run_app():
 
         container.write("*En cas que es detecti algun error, cal modificar l'arxiu que s'ha penjat i tornar-ho a intentar")
 
-def convert_file_to_graph(file, project_name, include_summary):
+def convert_file_to_graph(file, project_name):
     st.session_state['pushed_crea_button'] = True
 
     if file is not None:
@@ -87,8 +72,7 @@ def convert_file_to_graph(file, project_name, include_summary):
 
         st.session_state['characters_total_takes'] = characters_total_takes
 
-        if include_summary:
-            convert_summary(characters_total_takes)
+        convert_summary(characters_total_takes)
             
 def preview_characters(characters_total_takes, container):
     copy_characters_total_takes = dict(characters_total_takes)
@@ -105,72 +89,33 @@ def preview_characters(characters_total_takes, container):
         character = list(sorted_dict.keys())[i]
         total_takes = list(sorted_dict.values())[i]
         form.selectbox(label=f'{character} ({total_takes} takes)', options=voice_actors, key=character.replace('\t⚠', ''))
-    submitted = form.form_submit_button("Afegeix actors")
+    submitted = form.form_submit_button("Confirma")
 
     if submitted:
         project_name = st.session_state['project_name']
-        include_summary = st.session_state['include_summary']
         st.session_state['updated_actors'] = True
         update_files(characters_total_takes)
-        download_updated(project_name, container, include_summary)
+        download_updated(project_name, container)
 
-def download(project_name, container, include_summary):
-    if not include_summary:
-        with open('grafic.xlsx', 'rb') as output_file:
-            container.download_button(
-                label='Descarrega sense actors',
-                data=output_file,
-                file_name=f'grafic {unidecode.unidecode(project_name)}.xlsx',
-                mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                key = 1)
+def download_updated(project_name, container):
+    write_zip()
+    if project_name == '':
+        file_name = 'grafic.zip'
     else:
-        write_zip()
-        if project_name == '':
-            file_name = 'grafic.zip'
-        else:
-            file_name = f'{unidecode.unidecode(project_name)}.zip'
-        with open("output.zip", "rb") as output_file:
-            container.download_button(
-                label='Descarrega sense actors',
-                data=output_file,
-                file_name=file_name,
-                mime='application/zip',
-                key = 1)
-
-def download_updated(project_name, container, include_summary):
-    if not include_summary:
-        with open('grafic_actors.xlsx', 'rb') as output_file:
-            container.download_button(
-                label='Descarrega amb actors',
-                data=output_file,
-                file_name=f'grafic {unidecode.unidecode(project_name)}.xlsx',
-                mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                key = 2)
-    else:
-        write_zip()
-        if project_name == '':
-            file_name = 'grafic.zip'
-        else:
-            file_name = f'{unidecode.unidecode(project_name)}.zip'
-        with open("output_updated.zip", "rb") as output_file:
-            container.download_button(
-                label='Descarrega amb actors',
-                data=output_file,
-                file_name=file_name,
-                mime='application/zip',
-                key = 2)
+        file_name = f'{unidecode.unidecode(project_name)}.zip'
+    with open("output_updated.zip", "rb") as output_file:
+        container.download_button(
+            label='Descarrega',
+            data=output_file,
+            file_name=file_name,
+            mime='application/zip',
+            key = 2)
 
 def write_zip():
-    if st.session_state['updated_actors'] == False:
-        zipObj = ZipFile("output.zip", "w")
-        zipObj.write("grafic.xlsx")
-        zipObj.write("resum.txt")
-        zipObj.close()
-    else:
-        zipObj = ZipFile("output_updated.zip", "w")
-        zipObj.write("grafic_actors.xlsx")
-        zipObj.write("resum_actors.txt")
-        zipObj.close()
+    zipObj = ZipFile("output.zip", "w")
+    zipObj.write("grafic.xlsx")
+    zipObj.write("resum.txt")
+    zipObj.close()
 
 def hide_menu():
     hide_menu_style = """
