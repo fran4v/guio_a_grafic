@@ -213,10 +213,11 @@ def convert_summary(characters_total_takes):
             takes_summary = ' | '.join(takes_with_character_list)
             f.write(f'{takes_summary}\n\n')
         
-        f.write('\n/// ESTADILLO\n\n')
+        f.write('\n/// ESTADILLO\n')
+        f.write('(Preparado para copiar y pegar en Excel con columnas separadas)\n\n')
 
         for character in list(characters_total_takes.keys()):
-            f.write(f'{character}\t\t{characters_total_takes[character]}\n')
+            f.write(f'{character}	{characters_total_takes[character]}\n')
 
 def update_summary(characters_total_takes):
     characters_in_takes_list = st.session_state['characters_in_takes_list']
@@ -253,10 +254,14 @@ def update_summary(characters_total_takes):
                 takes_summary = ' | '.join(sorted(actors_takes_dict[actor], key=lambda x: float(x)))
                 f.write(f'{takes_summary}\n\n')
         
-        f.write('\n/// ESTADILLO\n\n')
+        f.write('\n/// ESTADILLO\n')
+        f.write('(Preparado para copiar y pegar en Excel con columnas separadas)\n\n')
 
         for character in list(characters_total_takes.keys()):
-            actor = f'({characters_actors_dict[character]})'
+            actor = characters_actors_dict[character]
             if characters_actors_dict[character] == '(buit)':
                 actor = ''
-            f.write(f'{character}\t\t{characters_total_takes[character]}\t\t{actor}\n')
+            if actor == '':
+                f.write(f'{character}	{characters_total_takes[character]}\n')
+            else:
+                f.write(f'{character}	{characters_total_takes[character]}	{actor}\n')
